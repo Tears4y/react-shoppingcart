@@ -1,25 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import ProductList from './components/ProductList';
+import SearchNavBar from './components/SearchNavBar';
+import Login from './components/Login';
+import ShoppingCart from './components/ShoppingCart';
+
+
 
 function App() {
+
+  const [searchKeyWord, setSearchKeyWord] = useState("")
+
+  const auth = localStorage.getItem('cart-token')
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <SearchNavBar
+          keyWord={searchKeyWord}
+          setKeyWord={setSearchKeyWord}
+        />
+        <Routes>
+          {
+            auth ? (
+              <Route path="/" element={<ProductList searchKeyWord={searchKeyWord} />} />
+            ) : (
+              <Route path="/login" element={<Login />} />
+            )
+          }
+          {!auth && <Route path='/' element={<Navigate to='/login' />} />}
+          <Route path="/carts/user/:userId" element={<ShoppingCart />} />
+          <Route path='*' element={<Navigate to='/' />} />
+          <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
