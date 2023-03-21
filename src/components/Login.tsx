@@ -3,7 +3,7 @@ import { Avatar, Button, Paper, TextField } from "@mui/material"
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { BaseUrl } from "../environment"
-
+import { getSelectedProductsQuantities } from "./initReduxService"
 
 
 const Login = () => {
@@ -37,13 +37,19 @@ const Login = () => {
                 localStorage.setItem('cart-user', JSON.stringify(user))
               }
             })
-            setTimeout(window.location.reload() as unknown as TimerHandler, 2000)
+
+            // 初始化redux所需数据 
+            const initReduxhData = async () => {
+              await getSelectedProductsQuantities()
+
+              setTimeout(window.location.reload() as unknown as TimerHandler, 2000)
+            }
+            initReduxhData()
           })
           .catch((err: any) => console.log(err))
       })
       .catch((err: any) => console.log(err))
   }
-
 
 
   return (

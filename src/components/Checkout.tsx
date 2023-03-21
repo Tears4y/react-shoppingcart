@@ -1,14 +1,26 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@mui/material';
+import store from '../store/store'
 
 
 
-const Checkout = ({ open, handleClose, totalPrice }: { open: boolean, handleClose: () => void, totalPrice: number }) => {
+
+const Checkout = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
+
+  const [totalPrice, setTotalPrice] = useState(store.getState().totalPrice)
+
 
   const handleSubmitOrder = () => {
     console.log("Submit the order successfully")
     handleClose()
   }
+
+
+  /* Redux监听 */
+  store.subscribe(() => {
+    setTotalPrice(store.getState().totalPrice);
+  })
+
 
   return (
     <>

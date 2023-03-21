@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { useState } from "react";
-import { AppBar, Avatar, Box, Divider, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography, Button, Badge } from "@mui/material"
-import { Clear, Email, Logout, Person, PersonAdd, Settings, ShoppingCartCheckout } from '@mui/icons-material';
-import { useLocation, NavLink, useNavigate } from 'react-router-dom';
-
+import { AppBar, Box, IconButton, InputBase, Toolbar, Typography, Button } from "@mui/material"
+import { Clear } from '@mui/icons-material';
+import { useLocation } from 'react-router-dom';
+import PersonalInfoMenu from './PersonalInfoMenu';
+import GoCart from './GoCart';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -50,18 +49,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-
 const SearchNavBar = ({ keyWord, setKeyWord }: { keyWord: string, setKeyWord: (keyWord: string) => void }) => {
-
-  const avatarStyle = { backgroundColor: '#2149e4', width: 32, height: 32 }
-  const menuItemStyle = { mr: "1rem" }
-
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
 
   const location = useLocation()
   const isLoginPage = location.pathname.search('login') !== -1
-  const navigate = useNavigate()
 
 
   const handleClear = () => setKeyWord("")
@@ -70,60 +61,13 @@ const SearchNavBar = ({ keyWord, setKeyWord }: { keyWord: string, setKeyWord: (k
 
   const handleKeyUp = (e: any) => e.keyCode == 27 && setKeyWord("")
 
-  const handleMenuClick = (e: any) => setAnchorEl(e.currentTarget)
-
-  const handleMenuClose = () => setAnchorEl(null)
-
-  let user: any = {}
-  user = JSON.parse(localStorage.getItem("cart-user") as string)
-
-  const logout = () => {
-    localStorage.removeItem('cart-token')
-    localStorage.removeItem('cart-user')
-    navigate('/login')
-    window.location.reload()
-  }
-
-
 
   return (
     <>
       <Box sx={{ flexGrow: 1, mb: 3 }}>
         <AppBar position="static">
           <Toolbar>
-            {
-              !isLoginPage && (
-                <>
-                  <IconButton
-                    sx={{ ml: 2, mr: 3 }}
-                    onClick={handleMenuClick}
-                  >
-                    <Avatar sx={avatarStyle} />
-                  </IconButton>
-                  <Menu
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClick={handleMenuClose}>
-                    <MenuItem>
-                      <Email color="primary" sx={menuItemStyle} /> {user.email}
-                    </MenuItem>
-                    <MenuItem>
-                      <Person color="primary" sx={menuItemStyle} /> My account
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem>
-                      <PersonAdd color="primary" sx={menuItemStyle} /> Add another account
-                    </MenuItem>
-                    <MenuItem>
-                      <Settings color="primary" sx={menuItemStyle} /> Settings
-                    </MenuItem>
-                    <MenuItem onClick={logout}>
-                      <Logout color="primary" sx={menuItemStyle} /> Logout
-                    </MenuItem>
-                  </Menu>
-                </>
-              )
-            }
+            {!isLoginPage && <PersonalInfoMenu />}
             <Typography
               variant="h6"
               noWrap
@@ -135,12 +79,7 @@ const SearchNavBar = ({ keyWord, setKeyWord }: { keyWord: string, setKeyWord: (k
             {
               !isLoginPage && (
                 <>
-                  <NavLink to={`/carts/user/${user.id}`} style={{ display: 'flex', alignItems: 'center', color: 'white', textDecoration: 'none', marginRight: '1rem' }}>
-                    <span style={{ marginRight: '0.5rem' }}>GO TO CART</span>
-                    {/* <Badge badgeContent={4} color="error"> */}
-                    <ShoppingCartCheckout fontSize='large' />
-                    {/* </Badge> */}
-                  </NavLink>
+                  <GoCart />
                   <Search>
                     <SearchIconWrapper>
                       <Search />
